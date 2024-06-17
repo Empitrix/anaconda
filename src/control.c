@@ -3,7 +3,7 @@
 
 static struct termios old, current;
 
-void initTermios(int echo){         /* terminal i/o settings */
+void init_termios(){                /* terminal i/o settings */
 	tcgetattr(0, &old);               /* grab old terminal i/o settings */
 	current = old;                    /* make new settings same as old settings */
 	current.c_lflag &= ~ICANON;       /* disable buffered i/o */
@@ -12,15 +12,15 @@ void initTermios(int echo){         /* terminal i/o settings */
 }
 
 /* Restore old terminal i/o settings */
-void resetTermios(void){
+void reset_termios(void){
 	tcsetattr(0, TCSANOW, &old);
 }
 
 char getl(void){
 	char ch;
-	initTermios(0);
+	init_termios();
 	ch = getchar();
-	resetTermios();
+	reset_termios();
 	return ch;
 }
 
@@ -40,6 +40,7 @@ for example:
 
 int getkey(void){
 	int k, o;
+	o = 0;
 	switch ((k = getl())) {
 		case '\033':{
 			getl();  // skip
