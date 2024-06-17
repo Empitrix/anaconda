@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "./structs.c"
+#include "structs.h"
  
 void delay_ms(int number_of_seconds){
 	// Converting time into milli_seconds

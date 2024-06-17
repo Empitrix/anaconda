@@ -1,8 +1,8 @@
 #include <signal.h>
 #include <unistd.h>
 #include <time.h>
-#include "./control.c"
-// #include "./utils.c"
+#include "control.h"
+
 
 // this is works for each loop and immediate action for key press
 /*

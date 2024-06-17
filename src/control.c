@@ -19,8 +19,7 @@ void reset_termios(void){
 char getl(void){
 	char ch;
 	init_termios();
-	ch = getchar();
-	reset_termios();
+	ch = getchar(); reset_termios();
 	return ch;
 }
 

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
-#include "src/screen.c"
-#include "src/loop.c"
+#include "src/screen.h"
+#include "src/loop.h"
 
 // macros
 #define WIDTH  60
