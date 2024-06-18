@@ -37,11 +37,11 @@ void draw_frame(int w, int h, struct BLOCK blocks[]){
 					if(y == 2 || y == 0 || y == h)
 						printf("─");
 					else{
-						int contain = contain_coord(x, y - 2, blocks);
-						if(contain){
+						int ic = contain_coord(x, y - 2, blocks);
+						if(ic != -1){
 							// printf("*");
 							// printf("");
-							printf("󰮯");
+							printf("%s", blocks[ic].body);
 						} else{
 							printf(" ");
 						}

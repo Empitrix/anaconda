@@ -39,7 +39,7 @@ void loop_event(void (*event)(int)) {
 */
 
 
-#define SPEED 500
+#define SPEED 100
 
 
 void alarm_ms(int ms){
