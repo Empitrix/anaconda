@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "utils.h"
 
 void cls(void){
@@ -7,10 +8,14 @@ void cls(void){
 }
 
 
-void draw_frame(int w, int h, struct BLOCK blocks[]){
+void draw_frame(int w, int h, struct BLOCK blocks[], void (*on_hit)(void), void (*on_get)(void), char title[]){
 	int x, y;
 	x = y = 0;
+	
 	cls();
+
+	int tlen = (int)strlen(title);
+	int tcount = 0;
 
 	while(y < (h + 1)){
 		while(x < (w + 1)){
@@ -29,14 +34,26 @@ void draw_frame(int w, int h, struct BLOCK blocks[]){
 				else if(y == 2 && x == w )
 					printf("┤");
 				else
-					printf("│");
+					if((contain_coord(x, y - 2, blocks) != -1))
+						// exit(0);
+						on_hit();
+					else
+						printf("│");
 			else
-				if(y == 1)
-					printf(" ");
-				else
-					if(y == 2 || y == 0 || y == h)
-						printf("─");
-					else{
+				if(y == 1){
+					if(tcount < tlen)
+						printf("%c", title[tcount]);
+					else
+						printf(" ");
+					tcount++;
+				} else
+					if(y == 2 || y == 0 || y == h){
+						if(contain_coord(x, y - 2, blocks) != -1)
+							// exit(0);
+							on_hit();
+						else
+							printf("─");
+					} else{
 						int ic = contain_coord(x, y - 2, blocks);
 						if(ic != -1){
 							printf("%s", blocks[ic].body);

@@ -13,7 +13,7 @@ void delay_ms(int ms){
 int contain_coord(int x, int y, struct BLOCK blocks[]){
 	int i;
 	for(i = 0; blocks[i].x; ++i){
-		if(blocks[i].x == x && blocks[i].y == y){
+		if(blocks[i].x - 1 == x && blocks[i].y == y){
 			return i;
 		}
 	}
@@ -26,5 +26,10 @@ void copy_blocks(struct BLOCK se[], struct BLOCK pa[]){
 	for(idx = 0; pa[idx].x; ++idx){
 		se[idx] = pa[idx];
 	}
+}
+
+
+int randint(int min, int max){
+	return rand() % max + min;
 }
 

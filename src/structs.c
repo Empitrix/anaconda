@@ -5,7 +5,7 @@ struct FRAME {
 };
 
 
-enum BLOCK_ACT{A_HEAD, A_BODY};
+enum BLOCK_ACT{A_HEAD, A_BODY, A_POINT};
 
 struct BLOCK {
 	int x;
