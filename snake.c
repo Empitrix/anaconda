@@ -144,8 +144,8 @@ void e_loop(int kcode){
 		struct BLOCK newb = {new_blocks[idx - 2].x, new_blocks[idx - 2].y, A_BODY, BODY_BLOCK};
 
 
-		int tx = randint(2, WIDTH - 2);
-		int ty = randint(3, HEIGHT - 4);
+		int tx = randint(2, WIDTH - 3);
+		int ty = randint(3, HEIGHT - 5);
 		struct BLOCK newt = {tx, ty, A_POINT, CHEE_BLOCK};
 		
 
@@ -169,14 +169,12 @@ void e_loop(int kcode){
 
 
 	if(kcode == 113){  // detect "q" and exit the game
-		init_termios();
-		reset_termios();
+		nrm_termios();
 		exit(0);
 	}
 
 	if(game_over){
-		init_termios();
-		reset_termios();
+		nrm_termios();
 		exit(0);
 	}
 

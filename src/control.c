@@ -23,6 +23,15 @@ char getl(void){
 	return ch;
 }
 
+
+void nrm_termios(){
+	tcgetattr(0, &old);
+	current = old;
+	current.c_lflag |= ICANON;
+	current.c_lflag |= ECHO;
+	tcsetattr(0, TCSANOW, &current);
+}
+
 /*
 Explain:
 the arrow keys returns as negative integer:
