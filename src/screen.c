@@ -34,9 +34,11 @@ void draw_frame(int w, int h, struct BLOCK blocks[], void (*on_hit)(void), void 
 				else if(y == 2 && x == w )
 					printf("┤");
 				else
-					if((contain_coord(x, y - 2, blocks) != -1))
+					if((contain_coord(x, y - 2, blocks) != -1)){
 						// exit(0);
+						printf("│");
 						on_hit();
+					}
 					else
 						printf("│");
 			else
@@ -48,9 +50,11 @@ void draw_frame(int w, int h, struct BLOCK blocks[], void (*on_hit)(void), void 
 					tcount++;
 				} else
 					if(y == 2 || y == 0 || y == h){
-						if(contain_coord(x, y - 2, blocks) != -1)
+						if(contain_coord(x, y - 2, blocks) != -1){
 							// exit(0);
+							printf("─");
 							on_hit();
+						}
 						else
 							printf("─");
 					} else{

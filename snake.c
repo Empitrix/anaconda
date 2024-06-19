@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdarg.h>
 #include "src/rules.h"
 #include "src/screen.h"
 #include "src/loop.h"
 
-volatile int game_over = 0;
 
 // macros
 #define WIDTH  60
@@ -14,16 +14,9 @@ volatile int game_over = 0;
 
 #define MAXBLOCKS 1000
 
-// #define HEAD_BLOCK "\x1B[31m\x1B[0m"
-// #define BODY_BLOCK "\x1B[32m\x1B[0m"
-#define HEAD_BLOCK "\x1B[31m8\x1B[0m"
-#define BODY_BLOCK "\x1B[32m0\x1B[0m"
 
-#define CHEE_BLOCK "\x1B[33m\x1B[0m"
-
-
-// static int game_over = 0;
 static int ix, iy = 0;
+static int game_over = 0;
 static enum DIRECTION pre_move = D_UP;
 int loopc;
 int points = 0;
@@ -43,13 +36,21 @@ void continuous(enum DIRECTION dir){
 }
 
 
-
-void on_hit(void){
-	init_termios();
-	reset_termios();
-	game_over = 1;
-}
+void on_hit(void){ game_over = 1; }
 void on_get(void){ points = points + 1; }
+
+
+void gof(int score, char *format, ...){
+	char message[1000];
+	va_list aptr;
+	int ret;
+	va_start(aptr, format);
+	ret = vsprintf(message, format, aptr);
+	va_end(aptr);
+	printf("%s\n", message);
+	nrm_termios();
+	exit(0);
+}
 
 
 static struct BLOCK blocks[MAXBLOCKS] = {
@@ -134,49 +135,29 @@ void e_loop(int kcode){
 
 	if(new_blocks[idx - 1].x == new_blocks[0].x && new_blocks[idx - 1].y == new_blocks[0].y){
 		points++;
-		// new_blocks[idx - 1].x = randint(1, WIDTH - 1);
-		// new_blocks[idx - 1].y = randint(3, HEIGHT - 4);
-
-		// new_blocks[idx - 1].x = randint(1, WIDTH - 1);
-		// new_blocks[idx - 1].y = randint(3, HEIGHT - 4);
-
-		// struct BLOCK newb = {(int)(WIDTH / 2) - 2, (int)(HEIGHT / 2) - 1, A_BODY, BODY_BLOCK};
 		struct BLOCK newb = {new_blocks[idx - 2].x, new_blocks[idx - 2].y, A_BODY, BODY_BLOCK};
-
-
-		int tx = randint(2, WIDTH - 3);
-		int ty = randint(3, HEIGHT - 5);
-		struct BLOCK newt = {tx, ty, A_POINT, CHEE_BLOCK};
-		
-
 		new_blocks[idx - 1] = newb;
-		new_blocks[idx] = newt;
-
-		// new_blocks[idx]
-		// new_blocks[idx].x = randint(1, WIDTH - 2);
-		// new_blocks[idx].y = randint(3, HEIGHT - 4);
+		// get new point block and added into the stack
+		int _max[2] = {WIDTH, HEIGHT};
+		new_blocks[idx] = unique_block(new_blocks, _max, CHEE_BLOCK, A_POINT);
 	}
 
-	copy_blocks(blocks, new_blocks);    // save state
+	copy_blocks(blocks, new_blocks);  // save state
 	pre_move = dir;
 
-	sprintf(title, "loop count: %i, points: %i", loopc, points);
+	// detect cross-over
+	if(bock_corssed(new_blocks[0], blocks) != -1)
+		gof(points, "You got crossed over %i", points);
 
+	sprintf(title, "loop count: %i, points: %i", loopc, points);
 	draw_frame(WIDTH, HEIGHT, new_blocks, on_hit, on_get, title);
 
-	// printf("loop count: %i, points: %i\n", loopc, points);
+	
+	if(kcode == 113)  // detect "q" and exit the game
+		gof(points, "");
 
-
-
-	if(kcode == 113){  // detect "q" and exit the game
-		nrm_termios();
-		exit(0);
-	}
-
-	if(game_over){
-		nrm_termios();
-		exit(0);
-	}
+	if(game_over)
+		gof(points, "");
 
 	++loopc;
 }
