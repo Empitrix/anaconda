@@ -39,8 +39,6 @@ void draw_frame(int w, int h, struct BLOCK blocks[]){
 					else{
 						int ic = contain_coord(x, y - 2, blocks);
 						if(ic != -1){
-							// printf("*");
-							// printf("");
 							printf("%s", blocks[ic].body);
 						} else{
 							printf(" ");
