@@ -11,15 +11,13 @@
 // macros
 #define WIDTH  60
 #define HEIGHT 30
-
-#define MAXBLOCKS 1000
+#define MAXBLOCKS 10000
 
 
 static int ix, iy = 0;
 static int game_over = 0;
 static enum DIRECTION pre_move = D_UP;
-int loopc;
-int points = 0;
+volatile int points = 0;
 
 
 void continuous(enum DIRECTION dir){
@@ -47,12 +45,14 @@ void gof(int score, char *format, ...){
 	va_start(aptr, format);
 	ret = vsprintf(message, format, aptr);
 	va_end(aptr);
+	printf("Point%s: %i\n", points <= 1 ? "" : "s", points);
 	printf("%s\n", message);
 	nrm_termios();
 	exit(0);
 }
 
 
+static int lvl = 1;
 static struct BLOCK blocks[MAXBLOCKS] = {
 	{(int)(WIDTH / 2) - 2, (int)(HEIGHT / 2) - 2, A_HEAD, HEAD_BLOCK},
 	{(int)(WIDTH / 2) - 2, (int)(HEIGHT / 2) - 1, A_BODY, BODY_BLOCK},
@@ -135,6 +135,15 @@ void e_loop(int kcode){
 
 	if(new_blocks[idx - 1].x == new_blocks[0].x && new_blocks[idx - 1].y == new_blocks[0].y){
 		points++;
+
+		switch((int)(points / 10) + 1){
+			case 1: lvl = 1; game_speed = 200; break;
+			case 2: lvl = 2; game_speed = 150; break;
+			case 3: lvl = 3; game_speed = 100; break;
+			case 4: lvl = 4; game_speed = 50; break;
+			default: break;
+		}
+
 		struct BLOCK newb = {new_blocks[idx - 2].x, new_blocks[idx - 2].y, A_BODY, BODY_BLOCK};
 		new_blocks[idx - 1] = newb;
 		// get new point block and added into the stack
@@ -147,23 +156,29 @@ void e_loop(int kcode){
 
 	// detect cross-over
 	if(bock_corssed(new_blocks[0], blocks) != -1)
-		gof(points, "You got crossed over %i", points);
+		gof(points, "You can't cross yourself");
 
-	sprintf(title, "loop count: %i, points: %i", loopc, points);
-	draw_frame(WIDTH, HEIGHT, new_blocks, on_hit, on_get, title);
+
+	char h1[20];
+	char h2[20];
+	char *h3 = " [q]uit";
+	sprintf(h1, " points: %i", points);
+	sprintf(h2, " lvl: %i", lvl);
+	char *headers[3] = { h1, h2, h3 };
+
+	draw_frame(WIDTH, HEIGHT, new_blocks, on_hit, on_get, headers);
 
 	
 	if(kcode == 113)  // detect "q" and exit the game
-		gof(points, "");
+		gof(points, "Quitting game");
 
 	if(game_over)
-		gof(points, "");
+		gof(points, "You can't cross frame");
 
-	++loopc;
 }
 
 int main(void){
-	loopc = 0;
+	lvl = 1;
 	loop_event(e_loop);
 	return 0;
 }
