@@ -20,19 +20,26 @@ Anaconda is an snake game written in C as a porfolio project and for practice on
 > [!WARNING]
 > This program is only for UNIX-like operating systems like Linux... and it doesn't work in Windows.
 
-Recommanded requirements:
+Recommanded to use:
 - [**Nerd Font**](https://github.com/ryanoasis/nerd-fonts)
 
-You can clone the project and compile it yourself:
+You can clone the project and compile it yourself or use CMake:
 ```bash
 git clone "https://github.com/empitrix/anaconda.git"
 cd ./anaconda
-cc ./snake.c -o ./snake.out
+
+# Cmake
+mkdir build
+cd ./build
+
+cmake ..
+cmake --build .
+# Now you have ./anaconda to play with
 ```
-Now you can run `./snake.out` to play the game.
+Now you can run `./build/anaconda` to play the game.
 
 
-- You can quiting the game by pressing `q`.
+- You can quit the game by pressing `q`.
 
 <!--
 ## Keys
