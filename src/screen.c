@@ -9,44 +9,38 @@ void cls(void){
 
 char *fill_char(char t[], int expand){
 	int i;
-	char *n = (char *)malloc(sizeof(char));
+	char *n = (char *)malloc(1000 * sizeof(char));
 	for(i = 0; t[i] != '\0'; ++i){
 		n[i] = t[i];
 	}
-	// n[i] = '\0';
 	if(i < expand)
 		for(; i < expand - 1; ++i){
 			n[i] = ' ';
 		}
-	// n[i] = '\0';
 	return n;
 }
 
 
-// void draw_frame(int w, int h, struct BLOCK blocks[], void (*on_hit)(void), void (*on_get)(void), char title[]){
 void draw_frame(int w, int h, struct BLOCK blocks[], void (*on_hit)(void), void (*on_get)(void), char *headers[3]){ int x, y;
 	x = y = 0;
 	
 	cls();
 	char title[w];
 
-	int divider = (w / 3) - 1;
+	for(int i = 0; i < w; i++)
+		title[i] = '\0';
+
+	int divider = (w / 3);
 	
 	int i;
 	char collect[100];
 
-	for(i = 0; i < 3; ++i){
-		if(i == 2){
-			sprintf(title, "%s%s", title, fill_char(headers[i], divider));
-		}else {
-			sprintf(title, "%s%s│", title, fill_char(headers[i], divider));
-		}
-	}
+	for(i = 0; i < 3; ++i)
+		sprintf(title, "%s%s│", title, fill_char(headers[i], divider));
 
-	// sprintf(title, "%s%s│", title, "  ");
 	int tlen = (int)strlen(title);
-	// int tlen = 39;
 	int tc = 0;
+	int ecount = 0;
 
 
 	while(y < (h + 1)){
@@ -67,26 +61,20 @@ void draw_frame(int w, int h, struct BLOCK blocks[], void (*on_hit)(void), void 
 					printf("┤");
 				else
 					if((contain_coord(x, y - 2, blocks) != -1)){
-						// exit(0);
 						printf("│");
 						on_hit();
 					}
-					else
-						if(y == 1 && x == w)
-							// printf("   1");
-							printf("    │");
+					else{
+						if(ecount == 1)
+							printf("    │");  // this should be here because of the chars are not 1 byte
 						else
 							printf("│");
-							//printf("0");
-						//printf("│");
+						ecount++;
+					}
 			else
 				if(y == 1){
-					if(tc < tlen){
-						// if(title[tc] != '\0')
+					if(tc < tlen)
 						printf("%c", title[tc]);
-					}
-					else
-						printf("*");
 					tc++;
 				} else
 					if(y == 2 || y == 0 || y == h){

@@ -1,9 +1,8 @@
-#include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 #include "structs.h"
  
-// wait by milli seconds
+// wait by milliseconds
 void delay_ms(int ms){
 	clock_t start_time = clock();
 	while (clock() < start_time + (1000 * ms));

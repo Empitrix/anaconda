@@ -13,8 +13,6 @@ struct BLOCK {
 	enum BLOCK_ACT act;
 	char* body;
 };
-/*
 
-*/
 
 enum DIRECTION {D_LEFT, D_RIGHT, D_UP, D_DOWN, NONE};

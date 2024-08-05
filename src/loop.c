@@ -25,7 +25,6 @@ static int __state;
 
 void loop_event_call(int sig) {
 	if(status == 0)
-		// alarm(1);
 		alarm_ms(game_speed);
 	if(__state)
 		p_event(__key);
