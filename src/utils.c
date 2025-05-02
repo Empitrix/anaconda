@@ -28,8 +28,14 @@ void copy_blocks(struct BLOCK se[], struct BLOCK pa[]){
 }
 
 
-int randint(int min, int max){
-	return rand() % max + min;
+// int randint(int min, int max){
+// 	return rand() % max + min;
+// }
+
+int randint(int min, int max) {
+	unsigned int timeSeed = (unsigned int)clock();             // CPU time in clock ticks
+	unsigned int randomValue = timeSeed * 1103515245 + 12345;  // LCG formula
+	return min + (randomValue % (max - min + 1));
 }
 
 
